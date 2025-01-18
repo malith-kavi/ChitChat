@@ -58,6 +58,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString();
         if (username.isEmpty() || username.length()<3){
             usernameInput.setError("Username length should be at least 3 characters");
+            //setInprogress(false);
             return;
         }
         setInprogress(true);
@@ -65,7 +66,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         if (userModel != null) {
             userModel.setUsername(username);
         }else {
-            userModel = new UserModel(phoneNumber,username, Timestamp.now());
+            userModel = new UserModel(phoneNumber,username, Timestamp.now(),FirebaseUtil.currentUserId());
         }
 
         FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {

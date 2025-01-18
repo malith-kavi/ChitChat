@@ -1,6 +1,7 @@
 package com.example.chitchat.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chitchat.ChatActivity;
 import com.example.chitchat.R;
 import com.example.chitchat.model.UserModel;
+import com.example.chitchat.utils.AndroidUtil;
+import com.example.chitchat.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -28,6 +32,17 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull UserModel model) {
         holder.usernameText.setText(model.getUsername());
         holder.phoneText.setText(model.getPhone());
+        if (model.getUserId().equals(FirebaseUtil.currentUserId())){
+            holder.usernameText.setText(model.getUsername()+" (Me)");
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            //navigate to chat
+            Intent intent = new Intent(context, ChatActivity.class);
+            AndroidUtil.passUserModelAsIntent(intent,model);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
     }
 
     @NonNull
